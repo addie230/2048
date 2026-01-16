@@ -140,3 +140,39 @@ static void insertSorted(char names[TOP_RESULTS][MAX_NICKNAME_LEN], unsigned sco
 		}
 	}
 }
+
+void updateLeaderboard(unsigned dim, const char* nickname, unsigned score) {
+	if (!nickname || score == 0 || dim < MIN_DIM || dim > MAX_DIM) {
+		return;
+	}
+	char names[TOP_RESULTS][MAX_NICKNAME_LEN];
+	unsigned scores[TOP_RESULTS];
+	load(dim, names, scores);
+	if (!qualifies(scores, score)) {
+		return;
+	}
+	insertSorted(names, scores, nickname, score);
+	save(dim, names, scores);
+}
+
+void printLeaderboard(unsigned dim) {
+	if (dim < MIN_DIM || dim > MAX_DIM) {
+		cout << "Invalid board size." << endl;
+		return;
+	}
+	char names[TOP_RESULTS][MAX_NICKNAME_LEN];
+	unsigned scores[TOP_RESULTS];
+	load(dim, names, scores);
+	cout << "Leaderboard for " << dim << "x" << dim << ":" << endl;
+	bool empty = true;
+	for (unsigned i = 0; i < TOP_RESULTS; i++) {
+		if (scores[i] > 0 && names[i][0] != '\0') {
+			cout << (i + 1) << ". " << names[i]
+				<< " - " << scores[i] << endl;
+			empty = false;
+		}
+	}
+	if (empty) {
+		cout << "(empty)" << endl;
+	}
+}
