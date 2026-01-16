@@ -86,89 +86,82 @@ bool hasAnyMoves(const unsigned board[MAX_DIM][MAX_DIM], unsigned dim) {
 	return false;
 }
 
-static void shiftRow(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned row, char cmd, bool& changed) {
+static bool compressLine(const unsigned in[MAX_DIM], unsigned out[MAX_DIM], unsigned dim)
+{
+	unsigned len = 0;
+	for (unsigned i = 0; i < dim; i++) {
+		if (in[i] != 0) {
+			out[len++] = in[i];
+		}
+	}
+	for (unsigned i = len; i < dim; i++) {
+		out[i] = 0;
+	}
+	return (len != dim);
+}
+
+static bool mergeAdjacent(unsigned line[MAX_DIM], unsigned dim) {
+	bool merged = false;
+	for (unsigned i = 0; i + 1 < dim; i++) {
+		if (line[i] != 0 && line[i] == line[i + 1]) {
+			line[i] *= 2;
+			line[i + 1] = 0;
+			merged = true;
+			i++;
+		}
+	}
+	return merged;
+}
+
+static bool buildShiftedLine(const unsigned in[MAX_DIM], unsigned out[MAX_DIM], unsigned dim)
+{
+	unsigned tmp[MAX_DIM];
+	bool changed = false;
+	changed |= compressLine(in, tmp, dim);
+	changed |= mergeAdjacent(tmp, dim);
+	changed |= compressLine(tmp, out, dim);
+	return changed;
+}
+
+static void shiftRow(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned row, char cmd, bool& changed)
+{
 	unsigned line[MAX_DIM];
-	unsigned result[MAX_DIM];
+	unsigned shifted[MAX_DIM];
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned col = (cmd == CMD_LEFT) ? i : (dim - 1u - i);
 		line[i] = board[row][col];
 	}
-	unsigned len = 0;
-	for (unsigned i = 0; i < dim; i++) {
-		if (line[i] != 0) {
-			result[len++] = line[i];
-		}
-	}
-	for (unsigned i = len; i < dim; i++) {
-		result[i] = 0;
-	}
-	for (unsigned i = 0; i + 1 < dim; i++) {
-		if (result[i] != 0 && result[i] == result[i + 1]) {
-			result[i] *= 2;
-			result[i + 1] = 0;
-			i++;
-			changed = true;
-		}
-	}
-	unsigned finalLine[MAX_DIM];
-	unsigned pos = 0;
-	for (unsigned i = 0; i < dim; i++) {
-		if (result[i] != 0) {
-			finalLine[pos++] = result[i];
-		}
-	}
-	for (unsigned i = pos; i < dim; i++) {
-		finalLine[i] = 0;
-	}
+	bool localChanged = buildShiftedLine(line, shifted, dim);
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned col = (cmd == CMD_LEFT) ? i : (dim - 1u - i);
-		if (board[row][col] != finalLine[i]) {
-			changed = true;
+		if (board[row][col] != shifted[i]) {
+			localChanged = true;
 		}
-		board[row][col] = finalLine[i];
+		board[row][col] = shifted[i];
+	}
+	if (localChanged) {
+		changed = true;
 	}
 }
 
-static void shiftCol(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned col, char cmd, bool& changed) {
+static void shiftCol(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned col, char cmd, bool& changed)
+{
 	unsigned line[MAX_DIM];
-	unsigned result[MAX_DIM];
+	unsigned shifted[MAX_DIM];
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned row = (cmd == CMD_UP) ? i : (dim - 1u - i);
 		line[i] = board[row][col];
 	}
-	unsigned len = 0;
-	for (unsigned i = 0; i < dim; i++) {
-		if (line[i] != 0) {
-			result[len++] = line[i];
-		}
-	}
-	for (unsigned i = len; i < dim; i++) {
-		result[i] = 0;
-	}
-	for (unsigned i = 0; i + 1 < dim; i++) {
-		if (result[i] != 0 && result[i] == result[i + 1]) {
-			result[i] *= 2;
-			result[i + 1] = 0;
-			i++;
-			changed = true;
-		}
-	}
-	unsigned finalLine[MAX_DIM];
-	unsigned pos = 0;
-	for (unsigned i = 0; i < dim; i++) {
-		if (result[i] != 0) {
-			finalLine[pos++] = result[i];
-		}
-	}
-	for (unsigned i = pos; i < dim; i++) {
-		finalLine[i] = 0;
-	}
+	bool localChanged = buildShiftedLine(line, shifted, dim);
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned row = (cmd == CMD_UP) ? i : (dim - 1u - i);
-		if (board[row][col] != finalLine[i]) {
-			changed = true;
+		if (board[row][col] != shifted[i]) {
+			localChanged = true;
 		}
-		board[row][col] = finalLine[i];
+		board[row][col] = shifted[i];
+	}
+	if (localChanged) {
+		changed = true;
 	}
 }
 
