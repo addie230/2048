@@ -55,5 +55,15 @@ unsigned randomTileValue(unsigned maxTileOnBoard) {
 	return pickByChance(r, 60, 30);
 }
 
+int digitCount(unsigned value) {
+	int count = 1;
+	while (value >= 10) {
+		value /= 10;
+		count++;
+	}
+	return count;
+}
+
+
 
 
