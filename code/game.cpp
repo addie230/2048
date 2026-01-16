@@ -64,3 +64,128 @@ void addRandomTile(unsigned board[MAX_DIM][MAX_DIM], unsigned dim) {
 		}
 	}
 }
+
+bool hasAnyMoves(const unsigned board[MAX_DIM][MAX_DIM], unsigned dim) {
+	if (countEmpty(board, dim) > 0) {
+		return true;
+	}
+	for (unsigned r = 0; r < dim; r++) {
+		for (unsigned c = 0; c + 1 < dim; c++) {
+			if (board[r][c] == board[r][c + 1]) {
+				return true;
+			}
+		}
+	}
+	for (unsigned c = 0; c < dim; c++) {
+		for (unsigned r = 0; r + 1 < dim; r++) {
+			if (board[r][c] == board[r + 1][c]) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+static void shiftRow(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned row, char cmd, bool& changed) {
+	unsigned line[MAX_DIM];
+	unsigned result[MAX_DIM];
+	for (unsigned i = 0; i < dim; i++) {
+		unsigned col = (cmd == CMD_LEFT) ? i : (dim - 1u - i);
+		line[i] = board[row][col];
+	}
+	unsigned len = 0;
+	for (unsigned i = 0; i < dim; i++) {
+		if (line[i] != 0) {
+			result[len++] = line[i];
+		}
+	}
+	for (unsigned i = len; i < dim; i++) {
+		result[i] = 0;
+	}
+	for (unsigned i = 0; i + 1 < dim; i++) {
+		if (result[i] != 0 && result[i] == result[i + 1]) {
+			result[i] *= 2;
+			result[i + 1] = 0;
+			i++;
+			changed = true;
+		}
+	}
+	unsigned finalLine[MAX_DIM];
+	unsigned pos = 0;
+	for (unsigned i = 0; i < dim; i++) {
+		if (result[i] != 0) {
+			finalLine[pos++] = result[i];
+		}
+	}
+	for (unsigned i = pos; i < dim; i++) {
+		finalLine[i] = 0;
+	}
+	for (unsigned i = 0; i < dim; i++) {
+		unsigned col = (cmd == CMD_LEFT) ? i : (dim - 1u - i);
+		if (board[row][col] != finalLine[i]) {
+			changed = true;
+		}
+		board[row][col] = finalLine[i];
+	}
+}
+
+static void shiftCol(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned col, char cmd, bool& changed) {
+	unsigned line[MAX_DIM];
+	unsigned result[MAX_DIM];
+	for (unsigned i = 0; i < dim; i++) {
+		unsigned row = (cmd == CMD_UP) ? i : (dim - 1u - i);
+		line[i] = board[row][col];
+	}
+	unsigned len = 0;
+	for (unsigned i = 0; i < dim; i++) {
+		if (line[i] != 0) {
+			result[len++] = line[i];
+		}
+	}
+	for (unsigned i = len; i < dim; i++) {
+		result[i] = 0;
+	}
+	for (unsigned i = 0; i + 1 < dim; i++) {
+		if (result[i] != 0 && result[i] == result[i + 1]) {
+			result[i] *= 2;
+			result[i + 1] = 0;
+			i++;
+			changed = true;
+		}
+	}
+	unsigned finalLine[MAX_DIM];
+	unsigned pos = 0;
+	for (unsigned i = 0; i < dim; i++) {
+		if (result[i] != 0) {
+			finalLine[pos++] = result[i];
+		}
+	}
+	for (unsigned i = pos; i < dim; i++) {
+		finalLine[i] = 0;
+	}
+	for (unsigned i = 0; i < dim; i++) {
+		unsigned row = (cmd == CMD_UP) ? i : (dim - 1u - i);
+		if (board[row][col] != finalLine[i]) {
+			changed = true;
+		}
+		board[row][col] = finalLine[i];
+	}
+}
+
+bool applyMove(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, char command) {
+	if (command != CMD_LEFT && command != CMD_RIGHT && command != CMD_UP && command != CMD_DOWN) {
+		return false;
+	}
+	bool changed = false;
+	if (command == CMD_LEFT || command == CMD_RIGHT) {
+		for (unsigned r = 0; r < dim; r++) {
+			shiftRow(board, dim, r, command, changed);
+		}
+	}
+	else {
+		for (unsigned c = 0; c < dim; c++) {
+			shiftCol(board, dim, c, command, changed);
+		}
+	}
+	return changed;
+}
