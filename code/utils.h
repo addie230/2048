@@ -9,4 +9,6 @@ void clearScreen();
 unsigned strLen(const char* s);
 void strCopy(const char* src, char* dest, unsigned destSize);
 
+unsigned randomTileValue(unsigned maxTileOnBoard);
+
 #endif
