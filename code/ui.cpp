@@ -42,7 +42,6 @@ static void readNickname(char nickname[MAX_NICKNAME_LEN]) {
 		cout << "Enter nickname (max 100 chars): ";
 		cin.getline(nickname, MAX_NICKNAME_LEN);
 		if (cin.fail()) {
-			cin.clear();
 			clearInputLine();
 			cout << "Nickname too long. Try again." << endl;
 			continue;
