@@ -39,8 +39,12 @@ void strCopy(const char* src, char* dest, unsigned destSize) {
 }
 
 static unsigned pickByChance(int r, int p2, int p4) {
-	if (r < p2) return TILE_2;
-	if (r < p2 + p4) return TILE_4;
+	if (r < p2) {
+		return TILE_2;
+	}
+	if (r < p2 + p4) {
+		return TILE_4;
+	}
 	return TILE_8;
 }
 

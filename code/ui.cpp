@@ -15,8 +15,8 @@ static void printTitle(const char* title) {
 
 static void waitEnterToContinue() {
 	cout << endl << "Press ENTER to continue...";
-	char dummy[2];
-	cin.getline(dummy, 2);
+	char buf[2];
+	cin.getline(buf, 2);
 }
 
 static void printMenu() {
@@ -28,7 +28,9 @@ static void printMenu() {
 }
 
 static bool isAllSpaces(const char* s) {
-	if (!s) return true;
+	if (!s) {
+		return true;
+	}
 	for (unsigned i = 0; s[i] != '\0'; i++) {
 		if (s[i] != ' ' && s[i] != '\t') {
 			return false;
@@ -123,7 +125,6 @@ static char readCommand() {
 	char buf[32];
 	cin.getline(buf, 32);
 	if (cin.fail()) {
-		cin.clear();
 		clearInputLine();
 		return 0;
 	}
