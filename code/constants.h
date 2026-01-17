@@ -1,3 +1,17 @@
+/**
+*
+* Solution to course project # 8
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Adriana Maslarova
+* @idnumber 0MI0600610
+* @compiler VC
+*
+* header file for constants
+*
+*/
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
@@ -18,7 +32,7 @@ const unsigned TILE_2 = 2;
 const unsigned TILE_4 = 4;
 const unsigned TILE_8 = 8;
 
-const unsigned EARLY_GAME_MAX_TILE = 128; //early game limit
-const unsigned MID_GAME_MAX_TILE = 512; //late game limit
+const unsigned EARLY_GAME_MAX_TILE = 128; 
+const unsigned MID_GAME_MAX_TILE = 512; 
 
 #endif
