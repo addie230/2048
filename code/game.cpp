@@ -86,8 +86,7 @@ bool hasAnyMoves(const unsigned board[MAX_DIM][MAX_DIM], unsigned dim) {
 	return false;
 }
 
-static bool compressLine(const unsigned in[MAX_DIM], unsigned out[MAX_DIM], unsigned dim)
-{
+static bool compressLine(const unsigned in[MAX_DIM], unsigned out[MAX_DIM], unsigned dim) {
 	unsigned len = 0;
 	for (unsigned i = 0; i < dim; i++) {
 		if (in[i] != 0) {
@@ -97,8 +96,14 @@ static bool compressLine(const unsigned in[MAX_DIM], unsigned out[MAX_DIM], unsi
 	for (unsigned i = len; i < dim; i++) {
 		out[i] = 0;
 	}
-	return (len != dim);
+	for (unsigned i = 0; i < dim; i++) {
+		if (out[i] != in[i]) {
+			return true;
+		}
+	}
+	return false;
 }
+
 
 static bool mergeAdjacent(unsigned line[MAX_DIM], unsigned dim) {
 	bool merged = false;
