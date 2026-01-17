@@ -177,3 +177,13 @@ static void playGame() {
 	updateLeaderboard(dim, nickname, finalScore);
 	waitEnterToContinue();
 }
+
+static void showLeaderboard() {
+	clearScreen();
+	printTitle("Leaderboard");
+	unsigned dim = readDimension();
+	clearScreen();
+	printTitle("Leaderboard");
+	printLeaderboard(dim);
+	waitEnterToContinue();
+}
