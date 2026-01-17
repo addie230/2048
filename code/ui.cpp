@@ -133,3 +133,47 @@ static char readCommand() {
 	}
 	return buf[0];
 }
+
+static void playGame() {
+	char nickname[MAX_NICKNAME_LEN];
+	readNickname(nickname);
+	unsigned dim = readDimension();
+	unsigned board[MAX_DIM][MAX_DIM];
+	initBoard(board, dim);
+	addRandomTile(board, dim);
+	addRandomTile(board, dim);
+	bool quitByUser = false;
+	while (hasAnyMoves(board, dim)) {
+		renderBoard(board, dim, nickname);
+		cout << endl << "Enter w/a/s/d or q to quit: ";
+		char cmd = readCommand();
+		if (!isValidCommand(cmd)) {
+			cout << "Invalid command." << endl;
+			waitEnterToContinue();
+			continue;
+		}
+		if (cmd == CMD_QUIT) {
+			quitByUser = true;
+			break;
+		}
+		bool moved = applyMove(board, dim, cmd);
+		if (moved) {
+			addRandomTile(board, dim);
+		}
+		else {
+			cout << "Move not possible." << endl;
+			waitEnterToContinue();
+		}
+	}
+	unsigned finalScore = sumBoard(board, dim);
+	clearScreen();
+	if (quitByUser) {
+		cout << "You quit the game." << endl;
+	}
+	else {
+		cout << "Game over (no valid moves)." << endl;
+	}
+	cout << "Final score: " << finalScore << endl << endl;
+	updateLeaderboard(dim, nickname, finalScore);
+	waitEnterToContinue();
+}
