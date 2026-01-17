@@ -115,3 +115,21 @@ static void renderBoard(const unsigned board[MAX_DIM][MAX_DIM], unsigned dim, co
 	}
 	cout << endl;
 }
+
+static bool isValidCommand(char cmd) {
+	return cmd == CMD_UP || cmd == CMD_LEFT || cmd == CMD_DOWN || cmd == CMD_RIGHT || cmd == CMD_QUIT;
+}
+
+static char readCommand() {
+	char buf[32];
+	cin.getline(buf, 32);
+	if (cin.fail()) {
+		cin.clear();
+		clearInputLine();
+		return 0;
+	}
+	if (buf[0] == '\0' || buf[1] != '\0') {
+		return 0;
+	}
+	return buf[0];
+}
