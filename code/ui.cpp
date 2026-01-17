@@ -134,37 +134,37 @@ static char readCommand() {
 	return buf[0];
 }
 
-static void playGame() {
-	char nickname[MAX_NICKNAME_LEN];
-	readNickname(nickname);
-	unsigned dim = readDimension();
-	unsigned board[MAX_DIM][MAX_DIM];
+static void initNewGame(unsigned board[MAX_DIM][MAX_DIM], unsigned dim) {
 	initBoard(board, dim);
 	addRandomTile(board, dim);
 	addRandomTile(board, dim);
-	bool quitByUser = false;
-	while (hasAnyMoves(board, dim)) {
-		renderBoard(board, dim, nickname);
-		cout << endl << "Enter w/a/s/d or q to quit: ";
-		char cmd = readCommand();
-		if (!isValidCommand(cmd)) {
-			cout << "Invalid command." << endl;
-			waitEnterToContinue();
-			continue;
-		}
-		if (cmd == CMD_QUIT) {
-			quitByUser = true;
-			break;
-		}
-		bool moved = applyMove(board, dim, cmd);
-		if (moved) {
-			addRandomTile(board, dim);
-		}
-		else {
-			cout << "Move not possible." << endl;
-			waitEnterToContinue();
-		}
+}
+
+static bool handleTurn(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, const char* nickname, bool& quitByUser) {
+	renderBoard(board, dim, nickname);
+	cout << endl << "Enter w/a/s/d or q to quit: ";
+	char cmd = readCommand();
+	if (!isValidCommand(cmd)) {
+		cout << "Invalid command." << endl;
+		waitEnterToContinue();
+		return false; 
 	}
+	if (cmd == CMD_QUIT) {
+		quitByUser = true;
+		return true;
+	}
+	bool moved = applyMove(board, dim, cmd);
+	if (moved) {
+		addRandomTile(board, dim);
+	}
+	else {
+		cout << "Move not possible." << endl;
+		waitEnterToContinue();
+	}
+	return false; 
+}
+
+static void finishGame(unsigned dim, const char* nickname, const unsigned board[MAX_DIM][MAX_DIM], bool quitByUser) {
 	unsigned finalScore = sumBoard(board, dim);
 	clearScreen();
 	if (quitByUser) {
@@ -176,6 +176,21 @@ static void playGame() {
 	cout << "Final score: " << finalScore << endl << endl;
 	updateLeaderboard(dim, nickname, finalScore);
 	waitEnterToContinue();
+}
+
+static void playGame() {
+	char nickname[MAX_NICKNAME_LEN];
+	readNickname(nickname);
+	unsigned dim = readDimension();
+	unsigned board[MAX_DIM][MAX_DIM];
+	initNewGame(board, dim);
+	bool quitByUser = false;
+	while (hasAnyMoves(board, dim)) {
+		if (handleTurn(board, dim, nickname, quitByUser)) {
+			break;
+		}
+	}
+	finishGame(dim, nickname, board, quitByUser);
 }
 
 static void showLeaderboard() {
