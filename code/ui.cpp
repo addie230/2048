@@ -187,3 +187,33 @@ static void showLeaderboard() {
 	printLeaderboard(dim);
 	waitEnterToContinue();
 }
+
+void runApplication() {
+	while (true) {
+		clearScreen();
+		printMenu();
+		int choice = 0;
+		cin >> choice;
+		if (cin.fail()) {
+			clearInputLine();
+			cout << "Invalid choice." << endl;
+			waitEnterToContinue();
+			continue;
+		}
+		clearInputLine();
+		if (choice == 1) {
+			playGame();
+		}
+		else if (choice == 2) {
+			showLeaderboard();
+		}
+		else if (choice == 3) {
+			return;
+		}
+		else {
+			cout << "Invalid choice." << endl;
+			waitEnterToContinue();
+		}
+	}
+}
+
