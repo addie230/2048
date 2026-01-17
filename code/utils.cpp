@@ -63,7 +63,3 @@ int digitCount(unsigned value) {
 	}
 	return count;
 }
-
-
-
-
