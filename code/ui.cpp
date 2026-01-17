@@ -67,3 +67,51 @@ static unsigned readDimension() {
 	clearInputLine();
 	return dim;
 }
+
+static void printHorizontalBorder(unsigned dim, int cellW) {
+	cout << "+";
+	for (unsigned c = 0; c < dim; c++) {
+		for (int i = 0; i < cellW; i++) {
+			cout << "-";
+		}
+		cout << "+";
+	}
+	cout << endl;
+}
+
+static void printCellValue(unsigned value, int cellW) {
+	cout << "|";
+	if (value == 0) {
+		for (int i = 0; i < cellW; i++) {
+			cout << " ";
+		}
+		return;
+	}
+	int digits = digitCount(value);
+	int leftPad = (cellW - digits) / 2;
+	int rightPad = cellW - digits - leftPad;
+	for (int i = 0; i < leftPad; i++) {
+		cout << " ";
+	}
+	cout << value;
+	for (int i = 0; i < rightPad; i++) {
+		cout << " ";
+	}
+}
+
+static void renderBoard(const unsigned board[MAX_DIM][MAX_DIM], unsigned dim, const char* nickname) {
+	clearScreen();
+	unsigned scorePreview = sumBoard(board, dim);
+	cout << "Player: " << nickname << endl;
+	cout << "Current sum: " << scorePreview << endl;
+	const int cellW = 8;
+	printHorizontalBorder(dim, cellW);
+	for (unsigned r = 0; r < dim; r++) {
+		for (unsigned c = 0; c < dim; c++) {
+			printCellValue(board[r][c], cellW);
+		}
+		cout << "|" << endl;
+		printHorizontalBorder(dim, cellW);
+	}
+	cout << endl;
+}
