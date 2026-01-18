@@ -153,14 +153,9 @@ static void shiftRow(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned ro
 	bool localChanged = buildShiftedLine(line, shifted, dim);
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned col = (cmd == CMD_LEFT) ? i : (dim - 1u - i);
-		if (board[row][col] != shifted[i]) {
-			localChanged = true;
-		}
 		board[row][col] = shifted[i];
 	}
-	if (localChanged) {
-		changed = true;
-	}
+	changed |= localChanged;
 }
 
 static void shiftCol(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned col, char cmd, bool& changed)
@@ -174,14 +169,9 @@ static void shiftCol(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, unsigned co
 	bool localChanged = buildShiftedLine(line, shifted, dim);
 	for (unsigned i = 0; i < dim; i++) {
 		unsigned row = (cmd == CMD_UP) ? i : (dim - 1u - i);
-		if (board[row][col] != shifted[i]) {
-			localChanged = true;
-		}
 		board[row][col] = shifted[i];
 	}
-	if (localChanged) {
-		changed = true;
-	}
+	changed |= localChanged;
 }
 
 bool applyMove(unsigned board[MAX_DIM][MAX_DIM], unsigned dim, char command) {
