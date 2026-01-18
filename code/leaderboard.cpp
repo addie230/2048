@@ -112,10 +112,15 @@ static bool qualifies(const unsigned scores[TOP_RESULTS], unsigned score) {
             return true;
         }
     }
-    return false;
+    return (score == scores[TOP_RESULTS - 1]);
 }
 
 static void insertSorted(char names[TOP_RESULTS][MAX_NICKNAME_LEN], unsigned scores[TOP_RESULTS], const char* nickname, unsigned score) {
+    if (score == scores[TOP_RESULTS - 1]) {
+        scores[TOP_RESULTS - 1] = score;
+        strCopy(nickname, names[TOP_RESULTS - 1], MAX_NICKNAME_LEN);
+        return;
+    }
     for (unsigned pos = 0; pos < TOP_RESULTS; pos++) {
         if (score > scores[pos]) {
             for (unsigned j = TOP_RESULTS - 1; j > pos; j--) {
