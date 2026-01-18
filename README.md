@@ -14,11 +14,13 @@ Final project for the **Introduction to Programming Practicum course** @ Faculty
 
 ---
 
-**1.Start game**
+ ### **1.Start game**
 
-**2.Leaderboard**
+### **2.Leaderboard**
 
-**3.Quit**
+### **3.Quit**
+
+---
 
 ### Starting a game:
 
@@ -39,15 +41,15 @@ Allows you to quit the game after you are done playing.
 
 ---
 
-w // move up
+w - move up
 
-a // move left
+a - move left
 
-d // move right
+d - move right
 
-s // move down
+s - move down
 
-q // quit the round
+q - quit the round
 
 ---
 
