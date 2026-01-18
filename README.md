@@ -23,7 +23,7 @@ Final project for the **Introduction to Programming Practicum course** @ Faculty
 ### Starting a game:
 
 When launching a new round, the game asks for a player nickname and the desired board dimension. 
-Bigger boards provide longer gameplay and higher score potential. 
+Bigger boards provide longer gameplay. 
 If you achieve a high enough score, you will be added to the Top 5 for that specific board size.
 
 ### Leaderboards:
