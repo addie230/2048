@@ -183,10 +183,11 @@ static void finishGame(unsigned dim, const char* nickname, const unsigned board[
 	clearScreen();
 	if (quitByUser) {
 		cout << "You quit the game." << endl;
+		cout << "Score was not saved." << endl << endl;
+		waitEnterToContinue();
+		return;
 	}
-	else {
-		cout << "Game over (no valid moves)." << endl;
-	}
+	cout << "Game over (no valid moves)." << endl;
 	cout << "Final score: " << finalScore << endl << endl;
 	updateLeaderboard(dim, nickname, finalScore);
 	waitEnterToContinue();
